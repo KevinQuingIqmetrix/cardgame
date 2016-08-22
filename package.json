@@ -8,5 +8,8 @@
   },
   "keywords": [],
   "author": "Kevin.Quing",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "write-files": "^1.0.0"
+  }
 }

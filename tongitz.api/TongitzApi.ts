@@ -1,7 +1,3 @@
-
-//3rd party
-
-
 //services
 import {TongitzService,ITongitzService} from "../tongitz.services/TongitzService"
 //models

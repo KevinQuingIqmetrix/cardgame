@@ -5,7 +5,11 @@ gamestate
 import {cardResource,playedCardResource} from "./cardResource"
 
 export interface gameStateResource{
+    gameId: number;
+    playerId: number
+
     turn: number;
+    turnPhase: turnPhaseEnum;
     playerTurn: string;
     myTurn: boolean;
     
@@ -32,4 +36,8 @@ interface myStatusResource extends playerStatusResource{
 }
 interface enemyStatusResource extends playerStatusResource{
     hand: number;
+}
+enum turnPhaseEnum{
+    drawOrChow=1,
+    play
 }

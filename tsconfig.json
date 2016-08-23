@@ -7,5 +7,10 @@
         // "preserveConstEnums": true,
         // "outFile": "../../built/local/tsc.js",
         // "sourceMap": true
+        ,"baseUrl": "./"
+        ,"paths": {
+            "@domains": ["tongitz.models/*"],
+            "@resources": ["tongitz.resource/*"]
+        }
     }   
 }

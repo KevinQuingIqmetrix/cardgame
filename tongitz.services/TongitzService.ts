@@ -1,11 +1,28 @@
-declare var require: any;
-//3rd party
-const writeFiles = require('write-files');
+declare var require: any;//do not move
 
-export interface ITongitzService {}
+//3rd party
+var fs = require("fs");
+const writeFiles = require('write-files');
+//models
+import {gameState} from "../tongitz.models/domain/gameState"
+
+const ff = "json"; //fileformat
+export interface ITongitzService {
+    saveState(gameState:gameState,id?:number);
+    loadState(id?:number);
+}
 export class TongitzService {
-    save(id:number, json: string) {
-        let filename = `${id}.txt`
+    public saveState(gameState:gameState,id?: number)
+    {
+        id = id ? id : 1;
+        this.saveToFile(JSON.stringify(gameState),id);
+    }
+    public loadState(id?:number): gameState{
+        id = id ? id : 1;
+        return JSON.parse(this.loadFromFile(id)) as gameState;
+    }
+    saveToFile(json: string, id:number) {
+        let filename = `${id}.${ff}`
         let filejson = `{"${filename}":"${json}"}`;
         let file = JSON.parse(filejson)
 
@@ -15,5 +32,9 @@ export class TongitzService {
                 throw err;
             }
         })
+    }
+    loadFromFile(id: number){
+        let fileString:string = fs.readFileSync(`${id}.${ff}`, 'utf8');
+        return fileString;
     }
 }

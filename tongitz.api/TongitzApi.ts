@@ -106,7 +106,7 @@ class TongitzApi implements ITongitzApi {
         newGame.houses = [];
         newGame.id = 1;
         newGame.playerStatuses = [];
-        p.forEach((x,i) => newGame.playerStatuses.push({name:x,id:i,hand:[]} as playerStatus));
+        p.forEach((x,i) => newGame.playerStatuses.push({name:x,id:i+1,hand:[]} as playerStatus));
         newGame.turn = 1;
         newGame.turnPhase = turnPhaseEnum.play;
         return newGame;

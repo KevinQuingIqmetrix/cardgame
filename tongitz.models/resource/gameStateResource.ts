@@ -14,7 +14,7 @@ export interface gameStateResource{
     myTurn: boolean;
     
     deck: number;
-    lastDiscard: cardResource ;
+    lastDiscard: playedCardResource ;
 
     status: myStatusResource;
     enemyStatus: enemyStatusResource;
@@ -22,7 +22,7 @@ export interface gameStateResource{
     error: string[];
 }
 
-interface houseResource {
+export interface houseResource {
     id: number;
     cards: playedCardResource[];
 }
@@ -31,13 +31,13 @@ interface playerStatusResource {
     discards: cardResource[];
     houses: houseResource[];
 }
-interface myStatusResource extends playerStatusResource{
+export interface myStatusResource extends playerStatusResource{
     hand: cardResource[];
 }
-interface enemyStatusResource extends playerStatusResource{
+export interface enemyStatusResource extends playerStatusResource{
     hand: number;
 }
-enum turnPhaseEnum{
+export enum turnPhaseEnum{
     drawOrChow=1,
     play
 }

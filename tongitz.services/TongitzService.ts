@@ -9,7 +9,7 @@ import {gameState} from "../tongitz.models/domain/gameState"
 const ff = "json"; //fileformat
 export interface ITongitzService {
     saveState(gameState:gameState,id?:number);
-    loadState(id?:number);
+    loadState(id?:number): gameState;
 }
 export class TongitzService {
     public saveState(gameState:gameState,id?: number)
@@ -17,9 +17,9 @@ export class TongitzService {
         id = id ? id : 1;
         this.saveToFile(JSON.stringify(gameState),id);
     }
-    public loadState(id?:number): gameState{
-        id = id ? id : 1;
-        return JSON.parse(this.loadFromFile(id)) as gameState;
+    public loadState(gameId?:number): gameState{
+        gameId = gameId ? gameId : 1;
+        return JSON.parse(this.loadFromFile(gameId)) as gameState;
     }
     saveToFile(json: string, id:number) {
         let filename = `${id}.${ff}`
@@ -33,8 +33,8 @@ export class TongitzService {
             }
         })
     }
-    loadFromFile(id: number){
-        let fileString:string = fs.readFileSync(`${id}.${ff}`, 'utf8');
+    loadFromFile(fileName: number){
+        let fileString:string = fs.readFileSync(`${fileName}.${ff}`, 'utf8');
         return fileString;
     }
 }

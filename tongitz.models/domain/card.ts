@@ -1,4 +1,4 @@
-import {suite} from "./suite";
+import {suite} from "tongitz.models/domain/suite";
 export class card{
     /**
      *card model
@@ -11,13 +11,4 @@ export class card{
         
     }
 }
-export class playedCard extends card{
-    /**
-     *when card is played(discard,house,sapaw)
-     */
-    constructor(public Card:card,
-                public playerId: number,
-                public turn: number) {
-        super(Card.id,Card.rank,Card.suite);
-    }
-}
+

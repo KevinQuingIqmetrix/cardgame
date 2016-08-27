@@ -2,42 +2,33 @@
 gamestate
 ----status of game viewed by one player
 */
-import {cardResource,playedCardResource} from "./cardResource"
+import {cardResource} from "tongitz.models/resource/cardResource"
+import {playedCardResource} from "tongitz.models/resource/playedCardResource"
+import {myStatusResource} from "tongitz.models/resource/myStatusResource"
+import {enemyStatusResource} from "tongitz.models/resource/enemyStatusResource"
+import {turnPhaseEnumResource} from "tongitz.models/resource/turnPhaseEnumResource"
 
 export interface gameStateResource{
+    //id of game
     gameId: number;
+    //id of player viewing the game state
     playerId: number
-
+    //current turn number of the game
     turn: number;
-    turnPhase: turnPhaseEnum;
+    //turn phase of the current turn
+    turnPhase: turnPhaseEnumResource;
+    //whose turn
     playerTurn: string;
+    //turn of the player viewing the game state
     myTurn: boolean;
-    
+    //number of cards left in deck
     deck: number;
+    //last discarded card
     lastDiscard: playedCardResource ;
-
+    //cards played and unplayed by the player viewing the game state
     status: myStatusResource;
-    enemyStatus: enemyStatusResource;
-
+    //cards by enemy
+    enemyStatus: enemyStatusResource[];
+    //internal error maybe..
     error: string[];
-}
-
-export interface houseResource {
-    id: number;
-    cards: playedCardResource[];
-}
-interface playerStatusResource {
-    name: string;
-    discards: cardResource[];
-    houses: houseResource[];
-}
-export interface myStatusResource extends playerStatusResource{
-    hand: cardResource[];
-}
-export interface enemyStatusResource extends playerStatusResource{
-    hand: number;
-}
-export enum turnPhaseEnum{
-    drawOrChow=1,
-    play
 }

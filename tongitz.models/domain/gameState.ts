@@ -2,39 +2,28 @@
 gamestate
 ----status of game viewed by one player
 */
-import {card,playedCard} from "./card"
-
+import {card} from "tongitz.models/domain/card"
+import {playedCard} from "tongitz.models/domain/playedCard"
+import {turnPhaseEnum} from "tongitz.models/domain/turnPhaseEnum"
+import {playerStatus} from "tongitz.models/domain/playerStatus"
+import {house} from "tongitz.models/domain/house"
 export class gameState{
     /**
      *
      */
     constructor() {
-        
     }
-    id: number;
+    public id: number;
 
-    turn: number;
-    turnPhase:turnPhaseEnum;
-    playerStatuses: playerStatus[];
+    public turn: number;
+    public turnPhase:turnPhaseEnum;
+    public playerStatuses: playerStatus[];
 
-    deck: card[];
-    discards: playedCard[];
-    houses: house[];
-
-    error: string[];
+    public deck: card[];
+    public discards: playedCard[];
+    public houses: house[];
+    public winner?:number
+    public error: string[];
 }
 
-export class house {
-    id: number;
-    cards: playedCard[];
-    playerId: number;
-}
-export class playerStatus {
-    id: number;
-    name: string;
-    hand: card[];
-}
-export enum turnPhaseEnum{
-    drawOrChow=1,
-    play
-}
+

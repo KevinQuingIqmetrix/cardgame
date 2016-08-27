@@ -1,11 +1,7 @@
-import {suiteResource} from "./suiteResource" 
+import {suiteEnumResource} from "tongitz.models/resource/suiteEnumResource" 
 
 export interface cardResource{
     id: number;
-    suite: suiteResource;
+    suite: suiteEnumResource;
     rank: number;
-}
-export interface playedCardResource extends cardResource {
-    turn: number;
-    playerName: string;
 }

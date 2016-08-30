@@ -1,6 +1,6 @@
-import {cardResource} from "tongitz.models/resource/cardResource"
-import {playedCardResource} from "tongitz.models/resource/playedCardResource"
-import {houseResource} from "tongitz.models/resource/houseResource"
+import {cardResource} from          "./cardResource"
+import {playedCardResource} from    "./playedCardResource"
+import {houseResource} from         "./houseResource"
 
 export interface playerStatusResource {
     //name of player

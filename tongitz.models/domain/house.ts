@@ -1,5 +1,5 @@
 
-import {playedCard} from "tongitz.models/domain/playedCard"
+import {playedCard} from "./playedCard"
 export class house {
     id: number;
     cards: playedCard[];

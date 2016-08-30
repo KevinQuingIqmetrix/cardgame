@@ -1,4 +1,4 @@
-import {suite} from "tongitz.models/domain/suite";
+import {suite} from "./suite";
 export class card{
     /**
      *card model

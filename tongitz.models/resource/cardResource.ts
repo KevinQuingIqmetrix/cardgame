@@ -1,4 +1,4 @@
-import {suiteEnumResource} from "tongitz.models/resource/suiteEnumResource" 
+import {suiteEnumResource} from "./suiteEnumResource" 
 
 export interface cardResource{
     id: number;

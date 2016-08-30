@@ -1,4 +1,4 @@
-import {sapawResource} from "tongitz.models/resource/sapawResource"
+import {sapawResource} from "./sapawResource"
 export interface playRequestResource {
     sapaw?:sapawResource[];
     house?:number[][];

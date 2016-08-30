@@ -1,4 +1,4 @@
-import {card} from "tongitz.models/domain/card"
+import {card} from "./card"
 export class playedCard extends card{
     /**
      *when card is played(discard,house,sapaw)

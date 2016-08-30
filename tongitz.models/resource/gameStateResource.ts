@@ -6,7 +6,7 @@ import {cardResource} from "tongitz.models/resource/cardResource"
 import {playedCardResource} from "tongitz.models/resource/playedCardResource"
 import {myStatusResource} from "tongitz.models/resource/myStatusResource"
 import {enemyStatusResource} from "tongitz.models/resource/enemyStatusResource"
-import {turnPhaseEnumResource} from "tongitz.models/resource/turnPhaseEnumResource"
+import {turnPhaseEnumResource} from "./turnPhaseEnumResource"
 
 export interface gameStateResource{
     //id of game

@@ -2,11 +2,11 @@
 gamestate
 ----status of game viewed by one player
 */
-import {card} from "tongitz.models/domain/card"
-import {playedCard} from "tongitz.models/domain/playedCard"
-import {turnPhaseEnum} from "tongitz.models/domain/turnPhaseEnum"
-import {playerStatus} from "tongitz.models/domain/playerStatus"
-import {house} from "tongitz.models/domain/house"
+import {card} from "./card"
+import {playedCard} from "./playedCard"
+import {turnPhaseEnum} from "./turnPhaseEnum"
+import {playerStatus} from "./playerStatus"
+import {house} from "./house"
 export class gameState{
     /**
      *

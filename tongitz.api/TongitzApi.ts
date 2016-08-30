@@ -1,21 +1,21 @@
 //helper
-import {mapper} from "../tongitz.common/mapper"
+import mapper = require("../tongitz.common/mapper")
 //services 
 import {TongitzService,ITongitzService} from "../tongitz.services/TongitzService"
 //models.resource
-import {gameStateResource} from "../tongitz.models/resource/gameStateResource"
-import {cardResource} from "../tongitz.models/resource/cardResource"
-import {playRequestResource} from "../tongitz.models/resource/playRequestResource"
-
-import {suiteEnumResource} from "../tongitz.models/resource/suiteEnumResource"
+import {gameStateResource} from     "../tongitz.models/resource/gameStateResource"
+import {cardResource} from          "../tongitz.models/resource/cardResource"
+import {playRequestResource} from   "../tongitz.models/resource/playRequestResource"
+import {suiteEnumResource} from     "../tongitz.models/resource/suiteEnumResource"
 //models.domain
-import {gameState} from "tongitz.models/domain/gameState"
-import {card} from "tongitz.models/domain/card"
-import {playedCard} from "tongitz.models/domain/playedCard"
-import {turnPhaseEnum} from "tongitz.models/domain/turnPhaseEnum"
-import {playerStatus} from "tongitz.models/domain/playerStatus"
-import {house} from "tongitz.models/domain/house"
-import {suite} from "../tongitz.models/domain/suite"
+
+import {gameState} from             "../tongitz.models/domain/gameState"
+import {card} from                  "../tongitz.models/domain/card"
+import {playedCard} from            "../tongitz.models/domain/playedCard"
+import {turnPhaseEnum} from         "../tongitz.models/domain/turnPhaseEnum"
+import {playerStatus} from          "../tongitz.models/domain/playerStatus"
+import {house} from                 "../tongitz.models/domain/house"
+import {suite} from                 "../tongitz.models/domain/suite"
 // var s = require("")
 
 //most methods return gamestate for now.

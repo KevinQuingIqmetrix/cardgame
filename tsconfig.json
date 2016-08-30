@@ -3,17 +3,18 @@
         "moduleResolution": "node",
         "module": "commonjs",
         // "noImplicitAny": true,
-        "removeComments": true
+        "removeComments": true,
+        "declaration":true,
+        "outDir":"lib/",
+        "target": "es5",
         // "preserveConstEnums": true,
         // "outFile": "../../built/local/tsc.js",
-        // "sourceMap": true
-        ,"baseUrl": "."
-        ,"paths": {
-            "@domains": ["tongitz.models/domain/*"],
-            "@resources": ["tongitz.resource/*"]
-        }
+        "sourceMap": true,
+        "baseUrl": "."
     },
     "exclude": [
+        "./node_modules/*",
         "test.ts"
+
     ]   
 }

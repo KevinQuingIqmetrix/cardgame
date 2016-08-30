@@ -214,7 +214,7 @@ class TongitzApi implements ITongitzApi {
     private isStraightFlush(cards:card[]) : boolean{
         let isFlush = cards.every(x => x.suite == cards[0].suite);
         cards = cards.sort((p,n) => p.rank - n.rank);
-        let is1Consecutive = cards.every((x,i) => ((cards[i+1-(Math.floor((i+1)/4))].rank) - x.rank) < 2)
+        let is1Consecutive = cards.every((x,i) => ((cards[i+1-(Math.floor((i+1)/cards.length))].rank) - x.rank) < 2)
         return (isFlush && is1Consecutive) 
     }
 }

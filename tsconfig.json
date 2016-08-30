@@ -12,5 +12,8 @@
             "@domains": ["tongitz.models/domain/*"],
             "@resources": ["tongitz.resource/*"]
         }
-    }   
+    },
+    "exclude": [
+        "test.ts"
+    ]   
 }

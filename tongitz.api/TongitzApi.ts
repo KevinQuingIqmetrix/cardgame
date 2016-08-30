@@ -22,7 +22,7 @@ import {suite} from "../tongitz.models/domain/suite"
 //in the future, chow returns nothing except httpstatusCode to update it's own gamestate
 //also, draw returns a card, and play returns httpstatuscode
 //in a farther future, instead of gamestate, send a turn number and return updates. this assumes client gamestate is unaltered
-interface ITongitzApi {
+export interface ITongitzApi {
     //start new game and return state of new game
     NewGame(...players: string[])//: gameStateResource;
     //get current status of game
@@ -38,7 +38,7 @@ interface ITongitzApi {
 
 }
 const rps:number = 13;
-class TongitzApi implements ITongitzApi {
+export class TongitzApi implements ITongitzApi {
     _svc: ITongitzService;
 
     constructor(tongitzService?: ITongitzService) {

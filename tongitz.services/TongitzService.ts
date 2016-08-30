@@ -22,10 +22,10 @@ export class TongitzService {
         return JSON.parse(this.loadFromFile(gameId)) as gameState;
     }
     saveToFile(json: string, id:number) {
-        let filename = `${id}.${ff}`
-        let filejson = `{"${filename}":"${json}"}`;
-        let file = JSON.parse(filejson)
-
+        // let filename = `tong${id}.${ff}`
+        // let filejson = `{${filename}:{}}`;
+        // let file = JSON.parse(filejson)
+        let file = {"game.json":json}
         writeFiles(file, err => {
             if(err) {
                 console.log(err);
@@ -34,7 +34,8 @@ export class TongitzService {
         })
     }
     loadFromFile(fileName: number){
-        let fileString:string = fs.readFileSync(`${fileName}.${ff}`, 'utf8');
+        // let fileString:string = fs.readFileSync(`tong${fileName}.${ff}`, 'utf8');
+        let fileString:string = fs.readFileSync("game.json")
         return fileString;
     }
 }

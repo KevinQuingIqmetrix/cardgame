@@ -151,7 +151,7 @@ export class TongitzApi implements ITongitzApi {
         return deck;
     }
     private shuffle(deck: card[]){
-        let returnDeck: card[];
+        let returnDeck: card[] = [];
         let cloneDeck = deck.map(x => x);
         deck.forEach(function (card,index){
             let randomCardIndex = Math.floor(Math.random() * cloneDeck.length);
@@ -171,6 +171,9 @@ export class TongitzApi implements ITongitzApi {
         newGame.playerStatuses.forEach(x => x.id = x.turn)//TODO: id should not be turn but for lack of implementation it is as it is
         newGame.turn = 1;
         newGame.turnPhase = turnPhaseEnum.play;
+        for(let x = 0;x<13;x++)
+            newGame.playerStatuses.forEach(p => p.hand.push(deck.splice(0,1)[0]))
+        newGame.playerStatuses[0].hand.push(deck.splice(0,1)[0])
         return newGame;
     }
 

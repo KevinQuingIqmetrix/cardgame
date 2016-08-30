@@ -46,6 +46,7 @@ import {playerStatusResource} from  "../tongitz.models/resource/playerStatusReso
     }
 
     export function playedCardToResource(playedCard:playedCard,player:[number,string][]) : playedCardResource {
+        if (!playedCard) return null;
         return this.playedCardToResourceWithName(playedCard,player.filter(p => p[0] == playedCard.playerId)[0][1])
     }
     export function playedCardToResourceWithName (playedCard:playedCard,player:string) : playedCardResource {
@@ -89,7 +90,7 @@ import {playerStatusResource} from  "../tongitz.models/resource/playerStatusReso
         
         pStats.forEach((p,i) => p.hand = t[i].hand.length);
 
-        return [] as enemyStatusResource[];
+        return pStats;//[] as enemyStatusResource[];
     }
     export function playerStatusToPlayerStatusResource (playerStatus:playerStatus, discards: playedCard[], houses:house[]): playerStatusResource {
         let t = playerStatus;

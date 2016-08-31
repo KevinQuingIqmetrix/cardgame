@@ -2,13 +2,12 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "module": "commonjs",
-        // "noImplicitAny": true,
+        "noImplicitAny": true,
         "removeComments": true,
         "declaration":true,
         "outDir":"lib/",
-        "target": "es5",
-        // "preserveConstEnums": true,
-        // "outFile": "../../built/local/tsc.js",
+        "target": "es6",
+        "strictNullChecks": true,
         "sourceMap": true,
         "baseUrl": "."
     },
@@ -16,5 +15,5 @@
         "./node_modules/*",
         "test.ts"
 
-    ]   
+    ]
 }

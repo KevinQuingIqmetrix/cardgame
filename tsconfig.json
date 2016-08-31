@@ -2,12 +2,12 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "module": "commonjs",
-        "noImplicitAny": true,
+        "noImplicitAny":false,
         "removeComments": true,
         "declaration":true,
         "outDir":"lib/",
         "target": "es6",
-        "strictNullChecks": true,
+        "strictNullChecks": false,
         "sourceMap": true,
         "baseUrl": "."
     },

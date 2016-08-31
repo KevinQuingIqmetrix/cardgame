@@ -24,11 +24,11 @@ import {suite} from                 "../tongitz.models/domain/suite"
 //in a farther future, instead of gamestate, send a turn number and return updates. this assumes client gamestate is unaltered
 export interface ITongitzApi {
     //start new game and return state of new game
-    NewGame(...players: string[])//: gameStateResource;
+    NewGame(...players: string[]): void//: gameStateResource;
     //get current status of game
     GetState(gameId:number, playerId: number): gameStateResource;
     //
-    CheckState(gameId:number, turn:number, playerId: number)
+    CheckState(gameId:number, turn:number, playerId: number): gameStateResource
     //chow(cardid[]:number) //fit given cards with last discard to add as new house, cant draw anymore
     Chow(gameId:number,playerId:number,cards:number[]): void
     //draw() //get new card, cant chow anymore
@@ -46,7 +46,7 @@ export class TongitzApi implements ITongitzApi {
             this._svc = tongitzService;
         else this._svc = new TongitzService();
     }
-    public NewGame (...p: string[])//: gameStateResource {
+    public NewGame (...p: string[]) : void//: gameStateResource {
     {
         let deck = this.generateDeck();
         deck = this.shuffle(deck);

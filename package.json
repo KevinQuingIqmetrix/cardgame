@@ -2,18 +2,23 @@
   "name": "cardgame",
   "version": "1.0.0",
   "description": "",
-  
   "main": "lib/index.js",
-  "typings":"lib/index",
-  "files": ["lib/"],
-
+  "typings": "lib/index",
+  "files": [
+    "lib/"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [],
   "author": "Kevin.Quing",
   "license": "ISC",
   "dependencies": {
     "write-files": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "sinon": "^1.17.5"
   }
 }

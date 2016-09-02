@@ -17,13 +17,13 @@ export class gameState{
 
     public turn: number;
     public turnPhase:turnPhaseEnum;
-    public playerStatuses: playerStatus[];
+    public playerStatuses: playerStatus[] = [];
 
-    public deck: card[];
-    public discards: playedCard[];
-    public houses: house[];
+    public deck: card[] = [];
+    public discards: playedCard[] = [];
+    public houses: house[] = [];
     public winner?:number
-    public error: string[];
+    public error: string[] = [];
 }
 
 

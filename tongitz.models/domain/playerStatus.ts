@@ -8,5 +8,5 @@ export class playerStatus {
     //name of player
     name: string;
     //list of player's cards on hand
-    hand: card[];
+    hand: card[] = [];
 }

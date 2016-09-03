@@ -34,7 +34,7 @@ export interface ITongitzApi {
     //draw() //get new card, cant chow anymore
     Draw(gameId:number,playerId:number): cardResource
     //play(playCards)
-    Play(gameId:number, playerId:number, playCards:playRequestResource): gameStateResource
+    Play(gameId:number, playerId:number, playCards:playRequestResource)
 
 }
 const rps:number = 13;
@@ -161,8 +161,8 @@ export class TongitzApi implements ITongitzApi {
         //check combination if possible 
         let proposedHand: card[] = [];
         //get lastDiscard as card
-        let discards = this._svc.getDiscards(gameId); 
-        proposedHand.push(discards[discards.length-1]);//last discard
+        let gameDiscards = this._svc.getDiscards(gameId); 
+        proposedHand.push(gameDiscards[gameDiscards.length-1]);//last discard
         gamePlayer.hand.filter(x => playerCardIds.indexOf(x.id) != -1).forEach(x => proposedHand.push(x));//hand card to combine
         // playerCardIds.map(x => gamePlayer.hand[gamePlayer.hand.map(x => x.id).indexOf(x)]).forEach(x => proposedHand.push(x));// same, just cool
         this.validateCombination(proposedHand);
@@ -172,7 +172,7 @@ export class TongitzApi implements ITongitzApi {
         newHouse.id = gameHouses.length + 1;
         newHouse.playerId = playerId;
         //splice last discard to new house
-        newHouse.cards.push(discards.splice(discards.length - 1,1)[0]);
+        newHouse.cards.push(gameDiscards.splice(gameDiscards.length - 1,1)[0]);
         //splice from hand to new house
         //map hand cards to id, map playerCardIds to it's index //TOOK some secs to do, some secs to lose, and 1 hour to remake
         playerCardIds.map((x,i) => gamePlayer.hand.map(i => i.id).indexOf(x))
@@ -195,7 +195,7 @@ export class TongitzApi implements ITongitzApi {
         let gamePlayerCount = this._svc.getPlayerCount(gameId);
         let playerCardIds = [];
         playerCardIds.push(...this.flatten(playCards));
-        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,turnPhaseEnum.drawOrChow);
+        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,turnPhaseEnum.play);
         this.validateCards(gamePlayer.hand.map(x => x.id),playerCardIds)//gameState,playerId,cardIds);        
         //validate each request part
         //sapaw; forEach get house cards from game houses and player's card and validateCombination
@@ -204,22 +204,41 @@ export class TongitzApi implements ITongitzApi {
             let proposedSapaw:card[] = [];
             let gameHouse = gameHouses.filter(gh => gh.id == s.houseId)[0].cards
             let pHandCards = s.cardId.map(cid => gamePlayer.hand.filter(c => c.id == cid)[0])
-            
             proposedSapaw.push(...gameHouse,...pHandCards)
             this.validateCombination(proposedSapaw);
         })
         //house; forEach, get house cards from request, validateCombination
-        
-        //make changes
-        //splice from hand
-        //discard; 
-
-
-
-        let gameState = this._svc.loadState(gameId);
-        if(gameState.deck.length < 1)
-            gameState.winner = gameState.playerStatuses.map(x => [x.id,x.hand.length]).sort((x,y) => x[1]-y[1])[0][0];
-        return {} as gameStateResource;
+        playCards.houses.forEach(h => {
+            let proposedHouse:card[] = [];
+            let house = h.map(x => gamePlayer.hand.filter(hc => hc.id == x)[0])
+            proposedHouse.push(...house);
+            this.validateCombination(proposedHouse);
+        })
+        //splice from hand, put to respective set of cards(list of sapaw, list of houses, discards)
+        playCards.sapaw.forEach(s => {
+            let handCardIndexes = s.cardId.map(cid => gamePlayer.hand.map(gh => gh.id).indexOf(cid))//index of requested cards
+            handCardIndexes.forEach(i => {
+                gameHouses.filter(gh => gh.id == s.houseId)[0]
+                    .cards.push(new playedCard(gamePlayer.hand.splice(i,1)[0],playerId,gameTurn))
+            })
+        })
+        playCards.houses.forEach(h => {
+            let handCardIndexes = h.map(cid => gamePlayer.hand.map(gh => gh.id).indexOf(cid))//index of requested cards
+            let newHouse = new house();
+            newHouse.id = gameHouses.length + 1;
+            newHouse.playerId = playerId;
+            handCardIndexes.forEach(i => {
+                newHouse.cards.push(new playedCard(gamePlayer.hand.splice(i,1)[0],playerId,gameTurn))
+            })
+            gameHouses.push(newHouse);
+        })
+        let gameDiscards = this._svc.getDiscards(gameId);
+        let discardIndex = gamePlayer.hand.map(x => x.id).indexOf(playCards.discard)
+        gameDiscards.push(new playedCard(gamePlayer.hand.splice(discardIndex,1)[0],playerId,gameTurn))
+        //apply
+        this._svc.applyState(gameId);
+        //mark winner
+        //if deck.length == 0, player with least hand
     }
     
     private generateDeck(){
@@ -284,7 +303,7 @@ export class TongitzApi implements ITongitzApi {
     private flatten(req:playRequestResource): number[]{//type should be playRequestResource
         let flatCardIds:number[] = [];
         !isNaN(req.discard) ? flatCardIds.push(req.discard) : null;
-        req.house ? req.house.forEach(x => flatCardIds.push(...x)) : null;
+        req.houses ? req.houses.forEach(x => flatCardIds.push(...x)) : null;
         req.sapaw ? req.sapaw.forEach(x => flatCardIds.push(...x.cardId)) : null;
         return flatCardIds.filter(x => !isNaN(x) && x > 0);
     }

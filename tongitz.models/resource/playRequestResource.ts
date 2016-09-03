@@ -1,7 +1,7 @@
 import {sapawResource} from "./sapawResource"
 export class playRequestResource {
     sapaw?:sapawResource[] = [];
-    house?:number[][] = [];
+    houses?:number[][] = [];
     discard?:number;
 }
 

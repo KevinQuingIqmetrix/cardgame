@@ -51,22 +51,97 @@ export interface ITongitzService {
 export class TongitzService //implements ITongitzService 
 {
     //where gameState are stored for more fetches and saves
-    gameStates:gameState[];
-    /**
-     *
-     */
-    constructor() {
-        this.gameStates = [];
-    }
-    public saveState(gameState:gameState,id?: number)
-    {
-        id = id ? id : 1;
-        this.saveToFile(JSON.stringify(gameState),id);
-    }
-    public loadState(gameId?:number): gameState{
+    gameStates:gameState[] = [];
+    addGame(gameId:number,turn:number,turnPhase:turnPhaseEnum){
         gameId = gameId ? gameId : 1;
-        return JSON.parse(this.loadFromFile(gameId)) as gameState;
+        // let savedGameState = this.fetchState(gameId)
+        let newGame = new gameState();
+        newGame.id = gameId;
+        newGame.turn = turn;
+        newGame.turnPhase = turnPhase;
     }
+    getTurn(gameId:number): number{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.turn;
+    }
+    getPhase(gameId:number): turnPhaseEnum{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.turnPhase;
+    }
+    addPlayer(gameId:number,player:playerStatus){
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        savedGameState.playerStatuses.push(player);
+    }
+    getPlayer(gameId:number, playerId: number):playerStatus{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.playerStatuses.filter(x => x.id == playerId)[0];
+    }
+    getPlayerCount(gameId:number): number{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.playerStatuses.length;
+    }
+    getDeck(gameId: number): card[]{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.deck;
+    }
+    setDeck(gameId:number,deck:card[]){
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        savedGameState.deck = deck;
+    }
+    getDiscards(gameId:number):playedCard[]{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.discards;
+    }
+    addHouse(gameId:number,house:house){
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        savedGameState.houses.push(house);
+    }
+    getHouses(gameId:number):house[]{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.houses;
+    }
+    getWinMethod(gameId:number): winMethodEnum{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.winMethod;
+    }
+    setWinner(gameId:number,playerId:number,winMethod:winMethodEnum){
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        savedGameState.winnerId = playerId;
+        savedGameState.winMethod = winMethod;
+    }
+    fetchState(gameId:number): gameState{
+        gameId = gameId ? gameId : 1;
+        if(this.gameStates.filter(x => x.id == gameId).length > 0){
+            return this.gameStates.filter(x => x.id == gameId)[0]
+        }
+        else {
+            let gameState = JSON.parse(this.loadFromFile(gameId)) as gameState;
+            if(!this.isEmpty(gameState)){
+                this.gameStates.push(gameState);
+                return gameState;
+            }
+            throw "BadRequest: no saved state of that game";
+        }
+    }
+    applyState(gameId:number){
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        this.saveToFile(JSON.stringify(savedGameState),gameId);
+    }
+
+    
     saveToFile(json: string, id:number) {
         // let filename = `tong${id}.${ff}`
         // let filejson = `{${filename}:{}}`;
@@ -84,4 +159,15 @@ export class TongitzService //implements ITongitzService
         let fileString:string = fs.readFileSync("game.json")
         return fileString;
     }
+    private isEmpty(obj) {
+        if (obj == null) return true;
+        if (obj.length > 0)    return false;
+        if (obj.length === 0)  return true;
+        if (typeof obj !== "object") return true;
+        for (var key in obj) {
+            if (Object.hasOwnProperty.call(obj, key)) return false;
+        }
+        return true;
+    }
+
 }

@@ -1,1 +1,1 @@
-export * from "./tongitz.api/TongitzApi"
+export * from "./tongitz.api/TongitzApi";

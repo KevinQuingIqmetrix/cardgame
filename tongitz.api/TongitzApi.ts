@@ -8,16 +8,7 @@ import {cardResource} from          "../tongitz.models/resource/cardResource"
 import {playRequestResource} from   "../tongitz.models/resource/playRequestResource"
 import {suiteEnumResource} from     "../tongitz.models/resource/suiteEnumResource"
 //models.domain
-
-import {gameState} from             "../tongitz.models/domain/gameState"
-import {card} from                  "../tongitz.models/domain/card"
-import {playedCard} from            "../tongitz.models/domain/playedCard"
-import {turnPhaseEnum} from         "../tongitz.models/domain/turnPhaseEnum"
-import {playerStatus} from          "../tongitz.models/domain/playerStatus"
-import {house} from                 "../tongitz.models/domain/house"
-import {suite} from                 "../tongitz.models/domain/suite"
-import {winMethodEnum} from         "../tongitz.models/domain/winMethodEnum"
-// var s = require("")
+import domain = require("../tongitz.models/domain/_domain")
 
 //most methods return gamestate for now.
 //in the future, chow returns nothing except httpstatusCode to update it's own gamestate
@@ -52,7 +43,7 @@ export class TongitzApi implements ITongitzApi {
     {
         gameId = gameId || 1;
         //set gameId, turn, phase
-        this._svc.addGame(gameId,1,turnPhaseEnum.play);
+        this._svc.addGame(gameId,1,domain.turnPhaseEnum.play);
         //make players, set name,turn,id , store in var
         let players = p.map((x,i) => {
             return {
@@ -60,7 +51,7 @@ export class TongitzApi implements ITongitzApi {
                 name:x,
                 turn:i+1,
                 hand:[]
-            } as playerStatus
+            } as domain.playerStatus
         })
         //make deck, shuffle, store in var
         let deck = this.shuffle(this.generateDeck());
@@ -101,7 +92,7 @@ export class TongitzApi implements ITongitzApi {
 
         let gameTurn:number = this._svc.getTurn(gameId);
         if(gameTurn == turn){
-            let emptyState = new gameState();
+            let emptyState = new domain.gameState();
             emptyState.turn = gameTurn;
             return mapper.gameStateToResource(emptyState, playerId);
         }
@@ -121,7 +112,7 @@ export class TongitzApi implements ITongitzApi {
         let gamePlayerTurn =  gamePlayer.turn;
         let gamePlayerCount = this._svc.getPlayerCount(gameId);
         //check if chowed or drawn already
-        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,turnPhaseEnum.drawOrChow);
+        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,domain.turnPhaseEnum.drawOrChow);
         
         //should store deck to var and save it later, but if splice apply to service's stored gameState's deck, 
         //then it will just be saved when applyState is called
@@ -131,7 +122,7 @@ export class TongitzApi implements ITongitzApi {
         //push spliced card to player hand
         gamePlayer.hand.push(drawnCard);//TODO:: addHand
         //update phase
-        gamePhase = turnPhaseEnum.play;//TODO:: setPhase
+        gamePhase = domain.turnPhaseEnum.play;//TODO:: setPhase
         //apply save
         this._svc.applyState(gameId)
         //return spliced card
@@ -159,10 +150,10 @@ export class TongitzApi implements ITongitzApi {
         let gamePlayerTurn =  gamePlayer.turn;
         let gamePlayerCount = this._svc.getPlayerCount(gameId);
 
-        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,turnPhaseEnum.drawOrChow);
+        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,domain.turnPhaseEnum.drawOrChow);
         this.validateCards(gamePlayer.hand.map(x => x.id),playerCardIds)//gameState,playerId,cardIds);
         //check combination if possible 
-        let proposedHand: card[] = [];
+        let proposedHand: domain.card[] = [];
         //get lastDiscard as card
         let gameDiscards = this._svc.getDiscards(gameId); 
         proposedHand.push(gameDiscards[gameDiscards.length-1]);//last discard
@@ -171,7 +162,7 @@ export class TongitzApi implements ITongitzApi {
         this.validateCombination(proposedHand);
         //new house
         let gameHouses = this._svc.getHouses(gameId);
-        let newHouse:house = new house();
+        let newHouse:domain.house = new domain.house();
         newHouse.id = gameHouses.length + 1;
         newHouse.playerId = playerId;
         //splice last discard to new house
@@ -179,14 +170,14 @@ export class TongitzApi implements ITongitzApi {
         //splice from hand to new house
         //map hand cards to id, map playerCardIds to it's index //TOOK some secs to do, some secs to lose, and 1 hour to remake
         playerCardIds.map((x,i) => gamePlayer.hand.map(i => i.id).indexOf(x))
-            .forEach(x => newHouse.cards.push(new playedCard(gamePlayer.hand.splice(x,1)[0],playerId,gameTurn)));
+            .forEach(x => newHouse.cards.push(new domain.playedCard(gamePlayer.hand.splice(x,1)[0],playerId,gameTurn)));
         this._svc.addHouse(gameId,newHouse);
         //update phase
-        gamePhase = turnPhaseEnum.play;//TODO:: setPhase
+        gamePhase = domain.turnPhaseEnum.play;//TODO:: setPhase
         //check if won. condition: gamePlayer.hand.length == 0
         if(gamePlayer.hand.length == 0)
         {
-            this._svc.setWinner(gameId,playerId,winMethodEnum.noHand);
+            this._svc.setWinner(gameId,playerId,domain.winMethodEnum.noHand);
         }
         this._svc.applyState(gameId);
     }
@@ -203,13 +194,13 @@ export class TongitzApi implements ITongitzApi {
         let gamePlayerCount = this._svc.getPlayerCount(gameId);
         let playerCardIds = [];
         playerCardIds.push(...this.flatten(playCards));
-        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,turnPhaseEnum.play);
+        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,domain.turnPhaseEnum.play);
         this.validateCards(gamePlayer.hand.map(x => x.id),playerCardIds)//gameState,playerId,cardIds);        
         //validate each request part
         //sapaw; forEach get house cards from game houses and player's card and validateCombination
         let gameHouses = this._svc.getHouses(gameId);
         playCards.sapaw.forEach(s => {
-            let proposedSapaw:card[] = [];
+            let proposedSapaw:domain.card[] = [];
             let gameHouse = gameHouses.filter(gh => gh.id == s.houseId)[0].cards
             let pHandCards = s.cardId.map(cid => gamePlayer.hand.filter(c => c.id == cid)[0])
             proposedSapaw.push(...gameHouse,...pHandCards)
@@ -217,7 +208,7 @@ export class TongitzApi implements ITongitzApi {
         })
         //house; forEach, get house cards from request, validateCombination
         playCards.houses.forEach(h => {
-            let proposedHouse:card[] = [];
+            let proposedHouse:domain.card[] = [];
             let house = h.map(x => gamePlayer.hand.filter(hc => hc.id == x)[0])
             proposedHouse.push(...house);
             this.validateCombination(proposedHouse);
@@ -227,42 +218,42 @@ export class TongitzApi implements ITongitzApi {
             let handCardIndexes = s.cardId.map(cid => gamePlayer.hand.map(gh => gh.id).indexOf(cid))//index of requested cards
             handCardIndexes.forEach(i => {
                 gameHouses.filter(gh => gh.id == s.houseId)[0]
-                    .cards.push(new playedCard(gamePlayer.hand.splice(i,1)[0],playerId,gameTurn))
+                    .cards.push(new domain.playedCard(gamePlayer.hand.splice(i,1)[0],playerId,gameTurn))
             })
         })
         playCards.houses.forEach(h => {
             let handCardIndexes = h.map(cid => gamePlayer.hand.map(gh => gh.id).indexOf(cid))//index of requested cards
-            let newHouse = new house();
+            let newHouse = new domain.house();
             newHouse.id = gameHouses.length + 1;
             newHouse.playerId = playerId;
             handCardIndexes.forEach(i => {
-                newHouse.cards.push(new playedCard(gamePlayer.hand.splice(i,1)[0],playerId,gameTurn))
+                newHouse.cards.push(new domain.playedCard(gamePlayer.hand.splice(i,1)[0],playerId,gameTurn))
             })
             gameHouses.push(newHouse);
         })
         let gameDiscards = this._svc.getDiscards(gameId);
         let discardIndex = gamePlayer.hand.map(x => x.id).indexOf(playCards.discard)
-        gameDiscards.push(new playedCard(gamePlayer.hand.splice(discardIndex,1)[0],playerId,gameTurn))
+        gameDiscards.push(new domain.playedCard(gamePlayer.hand.splice(discardIndex,1)[0],playerId,gameTurn))
         //apply
         this._svc.applyState(gameId);
         //mark winner, run out of deck, run out of handcards
         if(gamePlayer.hand.length == 0) {
-            this._svc.setWinner(gameId,playerId,winMethodEnum.noHand);
+            this._svc.setWinner(gameId,playerId,domain.winMethodEnum.noHand);
         }
         if(this._svc.getDeck.length < 1){
-            this._svc.setWinner(gameId,playerId,winMethodEnum.leastHand);
+            this._svc.setWinner(gameId,playerId,domain.winMethodEnum.leastHand);
         }
         //if deck.length == 0, player with least hand
     }
     
     private generateDeck(){
-        let deck:card[] = [];
+        let deck:domain.card[] = [];
         for (var i = 0; i < 52; i++)
-            deck.push(new card(i, ((i + 1) % rps) || rps, suite[suite[Math.floor(i / rps) + 1]]));
+            deck.push(new domain.card(i, ((i + 1) % rps) || rps, suite[suite[Math.floor(i / rps) + 1]]));
         return deck;
     }
-    private shuffle(deck: card[]){
-        let returnDeck: card[] = [];
+    private shuffle(deck: domain.card[]){
+        let returnDeck: domain.card[] = [];
         let cloneDeck = deck.map(x => x);
         deck.forEach(function (card,index){
             let randomCardIndex = Math.floor(Math.random() * cloneDeck.length);
@@ -271,11 +262,11 @@ export class TongitzApi implements ITongitzApi {
         })
         return returnDeck;
     }
-    private validateGameOnGoing(winMethod:winMethodEnum): boolean{
+    private validateGameOnGoing(winMethod:domain.winMethodEnum): boolean{
         if(winMethod) throw "badRequest: game already won"
         else return true;
     }
-    private validateTurnAndPhase(gameTurn:number,playerTurn:number,playerCount:number,gamePhase:turnPhaseEnum,shouldBeTurnPhase:turnPhaseEnum): boolean {
+    private validateTurnAndPhase(gameTurn:number,playerTurn:number,playerCount:number,gamePhase:domain.turnPhaseEnum,shouldBeTurnPhase:domain.turnPhaseEnum): boolean {
 
         if(playerTurn != ((gameTurn - 1) % playerCount)+1 ) {
             throw "notAllowed: mot your turn"; 
@@ -299,18 +290,18 @@ export class TongitzApi implements ITongitzApi {
         return true;
     }
 
-    private validateCombination (cards:card[]) : boolean{
+    private validateCombination (cards:domain.card[]) : boolean{
         if (!(this.isTrioQuadro(cards) || this.isStraightFlush(cards))) {
             throw "notAllowed: can't make a house"
             // return false;
         }
         return true;
     }
-    private isTrioQuadro(cards:card[]) : boolean{
+    private isTrioQuadro(cards:domain.card[]) : boolean{
         return cards.every(x => x.rank == cards[0].rank)
     }
     
-    private isStraightFlush(cards:card[]) : boolean{
+    private isStraightFlush(cards:domain.card[]) : boolean{
         let isFlush = cards.every(x => x.suite == cards[0].suite);
         cards = cards.sort((p,n) => p.rank - n.rank);
         let is1Consecutive = cards.every((x,i) => ((cards[i+1-(Math.floor((i+1)/cards.length))].rank) - x.rank) < 2)

@@ -7,6 +7,7 @@ import {playedCard} from "./playedCard"
 import {turnPhaseEnum} from "./turnPhaseEnum"
 import {playerStatus} from "./playerStatus"
 import {house} from "./house"
+import {winMethodEnum} from "./winMethodEnum"
 export class gameState{
     /**
      *
@@ -22,7 +23,10 @@ export class gameState{
     public deck: card[] = [];
     public discards: playedCard[] = [];
     public houses: house[] = [];
-    public winner?:number
+
+    public winnerId?:number
+    public winMethod?:winMethodEnum
+
     public error: string[] = [];
 }
 

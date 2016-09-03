@@ -16,6 +16,7 @@ import {turnPhaseEnum} from         "../tongitz.models/domain/turnPhaseEnum"
 import {playerStatus} from          "../tongitz.models/domain/playerStatus"
 import {house} from                 "../tongitz.models/domain/house"
 import {suite} from                 "../tongitz.models/domain/suite"
+import {winMethodEnum} from         "../tongitz.models/domain/winMethodEnum"
 // var s = require("")
 
 //most methods return gamestate for now.
@@ -112,6 +113,7 @@ export class TongitzApi implements ITongitzApi {
      * could check if deck.length > 0, but if the game can be marked as ended (if really ended) every chow and play, then just check that
      */
     public Draw(gameId:number,playerId:number) {
+        this.validateGameOnGoing(this._svc.getWinMethod(gameId));
         //check if turn of player
         let gameTurn = this._svc.getTurn(gameId);
         let gamePhase = this._svc.getPhase(gameId);
@@ -146,6 +148,7 @@ export class TongitzApi implements ITongitzApi {
      * SaveState 
      */
     public Chow(gameId:number,playerId:number,playerCardIds:number[]) {
+        this.validateGameOnGoing(this._svc.getWinMethod(gameId));
         if(playerCardIds.length < 2) //check if there are at least 2 cards
         {
             throw "badRequest:can't form a house with less than 3 cards"
@@ -181,10 +184,15 @@ export class TongitzApi implements ITongitzApi {
         //update phase
         gamePhase = turnPhaseEnum.play;//TODO:: setPhase
         //check if won. condition: gamePlayer.hand.length == 0
+        if(gamePlayer.hand.length == 0)
+        {
+            this._svc.setWinner(gameId,playerId,winMethodEnum.noHand);
+        }
         this._svc.applyState(gameId);
     }
     
     public Play(gameId:number, playerId: number, playCards: playRequestResource){
+        this.validateGameOnGoing(this._svc.getWinMethod(gameId));
         //discard is required
         if(!(playCards ? isNaN(playCards.discard) ? true : false  : false))
             return;
@@ -237,7 +245,13 @@ export class TongitzApi implements ITongitzApi {
         gameDiscards.push(new playedCard(gamePlayer.hand.splice(discardIndex,1)[0],playerId,gameTurn))
         //apply
         this._svc.applyState(gameId);
-        //mark winner
+        //mark winner, run out of deck, run out of handcards
+        if(gamePlayer.hand.length == 0) {
+            this._svc.setWinner(gameId,playerId,winMethodEnum.noHand);
+        }
+        if(this._svc.getDeck.length < 1){
+            this._svc.setWinner(gameId,playerId,winMethodEnum.leastHand);
+        }
         //if deck.length == 0, player with least hand
     }
     
@@ -257,7 +271,10 @@ export class TongitzApi implements ITongitzApi {
         })
         return returnDeck;
     }
-    
+    private validateGameOnGoing(winMethod:winMethodEnum): boolean{
+        if(winMethod) throw "badRequest: game already won"
+        else return true;
+    }
     private validateTurnAndPhase(gameTurn:number,playerTurn:number,playerCount:number,gamePhase:turnPhaseEnum,shouldBeTurnPhase:turnPhaseEnum): boolean {
 
         if(playerTurn != ((gameTurn - 1) % playerCount)+1 ) {

@@ -9,6 +9,7 @@ import {turnPhaseEnum} from         "../tongitz.models/domain/turnPhaseEnum"
 import {playerStatus} from          "../tongitz.models/domain/playerStatus"
 import {house} from                 "../tongitz.models/domain/house"
 import {suite} from                 "../tongitz.models/domain/suite"
+import {winMethodEnum} from         "../tongitz.models/domain/winMethodEnum"
 
 const ff = "json"; //fileformat
 export interface ITongitzService {
@@ -33,8 +34,12 @@ export interface ITongitzService {
     //adds house
     addHouse(gameId:number,house:house);
     //return houses:house[]
-    getHouses(gameId:number):house[]
-
+    getHouses(gameId:number):house[];
+    //return winner id
+    getWinMethod(gameId:number): winMethodEnum;
+    //set win method
+    //set winner player id
+    setWinner(gameId:number,playerId:number,winMethod:winMethodEnum)
     //returns gameState from file
     fetchState(gameId:number): gameState;
     //saves gamestates to file

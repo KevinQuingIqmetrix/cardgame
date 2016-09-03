@@ -7,6 +7,7 @@ import {playedCardResource} from "tongitz.models/resource/playedCardResource"
 import {myStatusResource} from "tongitz.models/resource/myStatusResource"
 import {enemyStatusResource} from "tongitz.models/resource/enemyStatusResource"
 import {turnPhaseEnumResource} from "./turnPhaseEnumResource"
+import {winMethodEnumResource} from "./winMethodEnumResource"
 
 export interface gameStateResource{
     //id of game
@@ -29,6 +30,14 @@ export interface gameStateResource{
     status: myStatusResource;
     //cards by enemy
     enemyStatus: enemyStatusResource[];
+
+    //win Method
+    winMethod?: winMethodEnumResource;
+    //winner name
+    winnerName: string;
+    //is Winner
+    isWinner:boolean;
+
     //internal error maybe..
     error: string[];
 }

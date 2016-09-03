@@ -6,6 +6,7 @@ import {turnPhaseEnum} from     "../tongitz.models/domain/turnPhaseEnum"
 import {playerStatus} from      "../tongitz.models/domain/playerStatus"
 import {house} from             "../tongitz.models/domain/house"
 import {suite} from             "../tongitz.models/domain/suite";
+import {winMethodEnum} from     "../tongitz.models/domain/winMethodEnum"
 //resource
 import {gameStateResource} from     "../tongitz.models/resource/gameStateResource" 
 import {cardResource} from          "../tongitz.models/resource/cardResource"
@@ -16,12 +17,14 @@ import {turnPhaseEnumResource} from "../tongitz.models/resource/turnPhaseEnumRes
 import {suiteEnumResource} from     "../tongitz.models/resource/suiteEnumResource"
 import {houseResource} from         "../tongitz.models/resource/houseResource"
 import {playerStatusResource} from  "../tongitz.models/resource/playerStatusResource"
+import {winMethodEnumResource} from "../tongitz.models/resource/winMethodEnumResource"
 
 
     //toResourceMap
     export function gameStateToResource (gameState:gameState, playerId:number): gameStateResource{
         let t = gameState;
         let turnBy =t.playerStatuses.filter(p => p.turn == (((t.turn-1) % t.playerStatuses.length)+1))[0]; 
+        let winner = t.winnerId ? [t.winnerId].map(x => t.playerStatuses.filter(x => x.id)[0].name)[0] : ''
         // let lastDiscardBy = t.playerStatuses.filter(p => p.id == t.discards[t.discards.length-1].playerId)[0];
         let idName: [number,string][] = t.playerStatuses.map(x => [x.id,x.name] as [number,string])
         return {
@@ -34,7 +37,11 @@ import {playerStatusResource} from  "../tongitz.models/resource/playerStatusReso
             deck: t.deck.length,
             lastDiscard: this.playedCardToResource(t.discards[t.discards.length-1],idName),
             status:this.playerStatusToMyStatus(t.playerStatuses.filter(x => x.id == playerId)[0],t.discards,t.houses),
-            enemyStatus: this.playerStatusToEnemyStatuses(t.playerStatuses.filter(x => x.id != playerId),t.discards,t.houses)
+            enemyStatus: this.playerStatusToEnemyStatuses(t.playerStatuses.filter(x => x.id != playerId),t.discards,t.houses),
+            winMethod: this.winMethodEnumToResource(t.winMethod),
+            winnerName: winner,
+            isWinner: t.winnerId == playerId,
+            error: []
         } as gameStateResource;
     }
     export function cardToResource (card:card) : cardResource{
@@ -100,4 +107,7 @@ import {playerStatusResource} from  "../tongitz.models/resource/playerStatusReso
             discards: discards.filter(c => c.playerId == t.id).map(c => this.playedCardToResourceWithName(c,t.name)),
             houses: houses.filter(h => h.playerId == t.id).map(h => this.houseToResourceWithName(h,t.name))
         } as playerStatusResource;
+    }
+    export function winMethodEnumToResource(winMethod:winMethodEnum): winMethodEnumResource{
+        return winMethod ? winMethodEnumResource[winMethodEnumResource[winMethod]] : null;
     }

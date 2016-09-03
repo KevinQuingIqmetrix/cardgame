@@ -1,4 +1,4 @@
-export interface sapawResource {
+export class sapawResource {
     houseId: number;
-    cardId: number[];
+    cardId: number[] = [];
 }

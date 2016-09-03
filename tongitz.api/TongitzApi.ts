@@ -185,6 +185,34 @@ export class TongitzApi implements ITongitzApi {
     }
     
     public Play(gameId:number, playerId: number, playCards: playRequestResource){
+        //discard is required
+        if(!(playCards ? isNaN(playCards.discard) ? true : false  : false))
+            return;
+        let gameTurn = this._svc.getTurn(gameId);
+        let gamePhase = this._svc.getPhase(gameId);
+        let gamePlayer = this._svc.getPlayer(gameId,playerId);
+        let gamePlayerTurn =  gamePlayer.turn;
+        let gamePlayerCount = this._svc.getPlayerCount(gameId);
+        let playerCardIds = [];
+        playerCardIds.push(...this.flatten(playCards));
+        this.validateTurnAndPhase(gameTurn,gamePlayerTurn,gamePlayerCount,gamePhase,turnPhaseEnum.drawOrChow);
+        this.validateCards(gamePlayer.hand.map(x => x.id),playerCardIds)//gameState,playerId,cardIds);        
+        //validate each request part
+        //sapaw; forEach get house cards from game houses and player's card and validateCombination
+        let gameHouses = this._svc.getHouses(gameId);
+        playCards.sapaw.forEach(s => {
+            let proposedSapaw:card[] = [];
+            let gameHouse = gameHouses.filter(gh => gh.id == s.houseId)[0].cards
+            let pHandCards = s.cardId.map(cid => gamePlayer.hand.filter(c => c.id == cid)[0])
+            
+            proposedSapaw.push(...gameHouse,...pHandCards)
+            this.validateCombination(proposedSapaw);
+        })
+        //house; forEach, get house cards from request, validateCombination
+        
+        //make changes
+        //splice from hand
+        //discard; 
 
 
 
@@ -251,6 +279,14 @@ export class TongitzApi implements ITongitzApi {
         cards = cards.sort((p,n) => p.rank - n.rank);
         let is1Consecutive = cards.every((x,i) => ((cards[i+1-(Math.floor((i+1)/cards.length))].rank) - x.rank) < 2)
         return (isFlush && is1Consecutive) 
+    }
+
+    private flatten(req:playRequestResource): number[]{//type should be playRequestResource
+        let flatCardIds:number[] = [];
+        !isNaN(req.discard) ? flatCardIds.push(req.discard) : null;
+        req.house ? req.house.forEach(x => flatCardIds.push(...x)) : null;
+        req.sapaw ? req.sapaw.forEach(x => flatCardIds.push(...x.cardId)) : null;
+        return flatCardIds.filter(x => !isNaN(x) && x > 0);
     }
 }
 // let a = new TongitzApi();

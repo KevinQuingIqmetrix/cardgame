@@ -3,10 +3,7 @@ import mapper = require("../tongitz.common/mapper")
 //services 
 import {TongitzService,ITongitzService} from "../tongitz.services/TongitzService"
 //models.resource
-import {gameStateResource} from     "../tongitz.models/resource/gameStateResource"
-import {cardResource} from          "../tongitz.models/resource/cardResource"
-import {playRequestResource} from   "../tongitz.models/resource/playRequestResource"
-import {suiteEnumResource} from     "../tongitz.models/resource/suiteEnumResource"
+import resource = require("../tongitz.models/resource/_resource")
 //models.domain
 import domain = require("../tongitz.models/domain/_domain")
 
@@ -18,15 +15,15 @@ export interface ITongitzApi {
     //start new game and return state of new game
     NewGame(id?:number,...players: string[]): void//: gameStateResource;
     //get current status of game
-    GetState(gameId:number, playerId: number): gameStateResource;
+    GetState(gameId:number, playerId: number): resource.gameStateResource;
     //
-    CheckState(gameId:number, turn:number, playerId: number): gameStateResource
+    CheckState(gameId:number, turn:number, playerId: number): resource.gameStateResource
     //chow(cardid[]:number) //fit given cards with last discard to add as new house, cant draw anymore
     Chow(gameId:number,playerId:number,cards:number[]): void
     //draw() //get new card, cant chow anymore
-    Draw(gameId:number,playerId:number): cardResource
+    Draw(gameId:number,playerId:number): resource.cardResource
     //play(playCards)
-    Play(gameId:number, playerId:number, playCards:playRequestResource)
+    Play(gameId:number, playerId:number, playCards:resource.playRequestResource)
 
 }
 const rps:number = 13;
@@ -72,7 +69,7 @@ export class TongitzApi implements ITongitzApi {
     * -gameId: id of the game retreiving. for now, it defaults to 1
     * -playerId: id of the player retreiving the gameState
      */
-    public GetState (gameId: number, playerId: number) : gameStateResource{
+    public GetState (gameId: number, playerId: number) : resource.gameStateResource{
         gameId = gameId || 1;
         //service get whole gameState
         return mapper.gameStateToResource(this._svc.fetchState(gameId),playerId);
@@ -84,7 +81,7 @@ export class TongitzApi implements ITongitzApi {
      * -turn: turn of last gameState fetched by player
      * -playerId: id of the player retreiving the gameState
      */
-    public CheckState (gameId: number, playerId: number, turn: number) : gameStateResource{
+    public CheckState (gameId: number, playerId: number, turn: number) : resource.gameStateResource{
         gameId = gameId || 1;
         //return only when gameState.turn is different than passed turn
         //return gameState with turn only, when turn is same. else, gameStatus
@@ -103,7 +100,7 @@ export class TongitzApi implements ITongitzApi {
     /**
      * could check if deck.length > 0, but if the game can be marked as ended (if really ended) every chow and play, then just check that
      */
-    public Draw(gameId:number,playerId:number) {
+    public Draw(gameId:number,playerId:number):resource.cardResource {
         this.validateGameOnGoing(this._svc.getWinMethod(gameId));
         //check if turn of player
         let gameTurn = this._svc.getTurn(gameId);
@@ -182,7 +179,7 @@ export class TongitzApi implements ITongitzApi {
         this._svc.applyState(gameId);
     }
     
-    public Play(gameId:number, playerId: number, playCards: playRequestResource){
+    public Play(gameId:number, playerId: number, playCards: resource.playRequestResource){
         this.validateGameOnGoing(this._svc.getWinMethod(gameId));
         //discard is required
         if(!(playCards ? isNaN(playCards.discard) ? true : false  : false))
@@ -308,7 +305,7 @@ export class TongitzApi implements ITongitzApi {
         return (isFlush && is1Consecutive) 
     }
 
-    private flatten(req:playRequestResource): number[]{//type should be playRequestResource
+    private flatten(req:resource.playRequestResource): number[]{//type should be playRequestResource
         let flatCardIds:number[] = [];
         !isNaN(req.discard) ? flatCardIds.push(req.discard) : null;
         req.houses ? req.houses.forEach(x => flatCardIds.push(...x)) : null;

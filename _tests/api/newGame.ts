@@ -15,7 +15,7 @@ describe("NewGame",() => {
     describe("Successful create", () => {
         let unit:api.TongitzApi;
 
-        it("Create game successfully", () => {
+        it("Create game successfully with 2 players", () => {
             //test data
             let gameid = 1, p1 = "test1", p2 = "test2";
 
@@ -35,7 +35,50 @@ describe("NewGame",() => {
             stubSetDeck.args[0].length.should.be.equal(2);
             stubSetDeck.args[0][0].should.be.equal(1);
             stubSetDeck.args[0][1].should.have.length(52-((Array().concat(p1,p2).length*12)+1))
-        }) 
+        });
+        it("Create game successfully with 3 players", () => {
+            //test data
+            let gameid = 1, p = ["test1","test2","test3"];
+
+            let service = new svc.TongitzService(); //to be stubbed dependencies
+
+            let stubAddGame = sinon.stub(service,"addGame") //stub dependencies
+            ,   stubSetDeck = sinon.stub(service,"setDeck")
+            ,   stubApplyState = sinon.stub(service,"applyState")
+
+            unit = new api.TongitzApi(service); //instantiate unit tested module
+            unit.NewGame(gameid,...p) //call tested function
+
+            restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
+            //asserts
+            calledOnce(stubAddGame,stubSetDeck,stubApplyState); //called once for every function supposed to be called
+            stubAddGame.calledWith(gameid,1,2).should.be.true;
+            stubSetDeck.args[0].length.should.be.equal(2); //2 parameters when setting deck
+            stubSetDeck.args[0][0].should.be.equal(gameid); //game id
+            stubSetDeck.args[0][1].should.have.length(52-((p.length*12)+1)) //cards left in deck
+            
+        });
+        // it("Create game successfully", () => {
+        //     //test data
+        //     let gameid = 1, p1 = "test1", p2 = "test2";
+
+        //     let service = new svc.TongitzService(); //to be stubbed dependencies
+
+        //     let stubAddGame = sinon.stub(service,"addGame") //stub dependencies
+        //     ,   stubSetDeck = sinon.stub(service,"setDeck")
+        //     ,   stubApplyState = sinon.stub(service,"applyState")
+
+        //     unit = new api.TongitzApi(service); //instantiate unit tested module
+        //     unit.NewGame(gameid,p1,p2) //call tested function
+
+        //     restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
+        //     //asserts
+        //     calledOnce(stubAddGame,stubSetDeck,stubApplyState); //called once for every function supposed to be called
+        //     stubAddGame.calledWith(gameid,1,2).should.be.true;
+        //     stubSetDeck.args[0].length.should.be.equal(2);
+        //     stubSetDeck.args[0][0].should.be.equal(1);
+        //     stubSetDeck.args[0][1].should.have.length(52-((Array().concat(p1,p2).length*12)+1))
+        // }) 
     })
 })
 

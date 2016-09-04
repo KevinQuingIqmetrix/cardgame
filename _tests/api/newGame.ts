@@ -5,6 +5,8 @@ import sinon = require("sinon")
 import assert = chai.assert;
 var should = chai.should();
 import expect = chai.expect;
+//helper
+import helper = require("../testHelper")
 //Module to unit test
 import api = require('../../tongitz.api/TongitzApi')
 //Dependencies to mock
@@ -28,9 +30,9 @@ describe("NewGame",() => {
             unit = new api.TongitzApi(service); //instantiate unit tested module
             unit.NewGame(gameid,...p) //call tested function
 
-            restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
+            helper.restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
             //asserts
-            calledOnce(stubAddGame,stubSetDeck,stubApplyState); //called once for every function supposed to be called
+            helper.calledOnce(stubAddGame,stubSetDeck,stubApplyState); //called once for every function supposed to be called
             stubAddGame.calledWith(gameid,1,2).should.be.true;
             stubSetDeck.args[0].length.should.be.equal(2);
             stubSetDeck.args[0][0].should.be.equal(1);
@@ -49,9 +51,9 @@ describe("NewGame",() => {
             unit = new api.TongitzApi(service); //instantiate unit tested module
             unit.NewGame(gameid,...p) //call tested function
 
-            restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
+            helper.restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
             //asserts
-            calledOnce(stubAddGame,stubSetDeck,stubApplyState); //called once for every function supposed to be called
+            helper.calledOnce(stubAddGame,stubSetDeck,stubApplyState); //called once for every function supposed to be called
             stubAddGame.calledWith(gameid,1,2).should.be.true;
             stubSetDeck.args[0].length.should.be.equal(2); //2 parameters when setting deck
             stubSetDeck.args[0][0].should.be.equal(gameid); //game id
@@ -72,7 +74,7 @@ describe("NewGame",() => {
             unit = new api.TongitzApi(service); //instantiate unit tested module
             expect(unit.NewGame.bind(unit,gameid,...p)).to.throw();
 
-            restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
+            helper.restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
         }) 
         it("when service method called throws an error", () => {
             //test data
@@ -87,29 +89,25 @@ describe("NewGame",() => {
             unit = new api.TongitzApi(service); //instantiate unit tested module
             expect(unit.NewGame.bind(unit,gameid,...p)).to.throw();
 
-            restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
+            helper.restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
         })
     })
 })
 
-function restore(...stubs:sinon.SinonStub[]){
-    stubs.forEach(x => x.restore());
-}
-function calledOnce(...stubs:sinon.SinonStub[]){
-    stubs.forEach(x => x.calledOnce.should.be.true);
-}
+
 
 
 /**
  * search
  * 
  * how to tsc only from specific folders
+ * 
  * how to run mocha on separate folders, this is if the test folders will be in each folder
  * EXAMPLE:
  * -tongitz.api/tests
  * -tongitz.services/tests
  * 
- * tongitz.services can be remodeled to return only whats needed. the first one to be fetched will store the gameState
+ * tongitz.services can be remodeled to return only whats needed. the first one to be fetched will store the gameState --DONE
  * EXAMPLE:
  * (Constructor: this.service = new service())
  * validatePhase(this.service.getTurnPhase)

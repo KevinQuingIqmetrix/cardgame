@@ -39,6 +39,7 @@ export class TongitzApi implements ITongitzApi {
     public NewGame (gameId?:number,...p: string[]) : void//: gameStateResource {
     {
         gameId = gameId || 1;
+        if(p.length < 2 || p.length > 3) throw "500","error";
         //set gameId, turn, phase
         this._svc.addGame(gameId,1,domain.turnPhaseEnum.play);
         //make players, set name,turn,id , store in var

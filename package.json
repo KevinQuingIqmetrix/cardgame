@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "mocha", 
+    "test": "tsc & mocha ./lib/_tests/tongitzTest", 
+    "mocha": "mocha",
     "runtestjs": "tsc test & node test"
   },
   "keywords": [],

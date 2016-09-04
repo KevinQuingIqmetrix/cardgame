@@ -53,7 +53,7 @@ export class TongitzApi implements ITongitzApi {
         //make deck, shuffle, store in var
         let deck = this.shuffle(this.generateDeck());
         //distribute/splice cards
-        for(let x = 0;x<11;x++)
+        for(let x = 0;x<12;x++)
             players.forEach(x => x.hand.push(deck.splice(0,1)[0]));
         players[0].hand.push(deck.splice(0,1)[0])
         //save deck
@@ -245,8 +245,8 @@ export class TongitzApi implements ITongitzApi {
     
     private generateDeck(){
         let deck:domain.card[] = [];
-        for (var i = 0; i < 52; i++)
-            deck.push(new domain.card(i, ((i + 1) % rps) || rps, suite[suite[Math.floor(i / rps) + 1]]));
+        for (var i = 1; i < 53; i++)
+            deck.push(new domain.card(i, ((i + 1) % rps) || rps, domain.suite[domain.suite[Math.floor(i / rps) + 1]]));
         return deck;
     }
     private shuffle(deck: domain.card[]){

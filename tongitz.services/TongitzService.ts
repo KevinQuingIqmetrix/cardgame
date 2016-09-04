@@ -38,11 +38,8 @@ export interface ITongitzService {
     fetchState(gameId:number): domain.gameState;
     //saves gamestates to file
     applyState(gameId:number);
-
-    saveState(gameState:domain.gameState,id?:number);
-    loadState(id?:number): domain.gameState;
 }
-export class TongitzService //implements ITongitzService 
+export class TongitzService implements ITongitzService 
 {
     //where gameState are stored for more fetches and saves
     gameStates:domain.gameState[] = [];

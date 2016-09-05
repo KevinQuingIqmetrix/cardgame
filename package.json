@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "tsc & mocha ./lib/_tests/tongitzTest", 
+    "test": "tsc & mocha ./lib/_tests/tongitzTest",
     "mocha": "mocha",
     "runtestjs": "tsc test & node test"
   },
@@ -17,6 +17,7 @@
   "author": "Kevin.Quing",
   "license": "ISC",
   "dependencies": {
+    "debug": "^2.2.0",
     "write-files": "^1.0.0"
   },
   "devDependencies": {

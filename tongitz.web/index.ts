@@ -12,5 +12,5 @@ app.get("/api/test", (req, res) => {
 services(app, tongitzApi);
 
 app.listen(905, () => {
-  console.log("api listening at port 905");
+  console.log("express server listening at port 905");
 });

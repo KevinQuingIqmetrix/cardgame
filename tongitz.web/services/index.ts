@@ -1,9 +1,9 @@
 import game = require("./game");
 import gameState = require("./gameState");
 
-function registerServices(app) {
-  game(app);
-  gameState(app);
+function registerServices(app, tongitzApi) {
+  game(app, tongitzApi);
+  gameState(app, tongitzApi);
 }
 
 export = registerServices;

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "express": "registry:npm/express#4.14.0+20160815112707",
+    "serve-static": "registry:npm/serve-static#1.11.1+20160810053450"
+  }
+}

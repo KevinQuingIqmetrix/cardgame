@@ -256,77 +256,83 @@ function log(s:any){
 // // log(classes)
 // // log(chosenStudent)
 
-class sapawResource {
-    houseId: number;
-    cardId: number[] = [];
-}
-class playRequestResource {
-    sapaw?:sapawResource[] = [];
-    house?:number[][] = [];
-    discard?:number;
-}
-// function flatten(obj:playRequestResource): number[]{//type should be playRequestResource
-//     let flatCardIds:number[] = [];
-//     let sampleReq = new playRequestResource();
-//     sampleReq.discard=0;
-//     // log(typeof(obj.house))
-//     // log(typeof(sampleReq["house"]))
-//     if(typeof(obj.discard) == typeof(sampleReq["discard"]) && obj.discard)
-//         flatCardIds.push(obj.discard);
-//     if(typeof(obj.house) == typeof(sampleReq["house"]) && obj.house)
-//         obj.house.forEach(x => flatCardIds.push(...x))
-//     if(typeof(obj.sapaw) == typeof(sampleReq["sapaw"]) && obj.sapaw)
-//         obj.sapaw.forEach(x => flatCardIds.push(...x.cardId))
-
-
-//     // typeof(obj.discard) == typeof(playRequestResource["discard"]) && ? flatCardIds.push(obj.discard) : null;
-//     // obj.house ? obj.house.forEach(x => flatCardIds.push(...x)) : null
-//     // obj.sapaw ? obj.sapaw.forEach(x => flatCardIds.push(...x.cardId)) : null
-//     return flatCardIds;
+// class sapawResource {
+//     houseId: number;
+//     cardId: number[] = [];
 // }
-// // //tests
-// // //empty anonymous
-// // console.log(flatten({}))
-// // //empty playRequestResource
-// // console.log(flatten({} as playRequestResource))
-// // //extra property and wrong key name
-// // console.log(flatten({asdf:1, discards:[[1,2],[2,3]]} as playRequestResource))
-// // console.log(flatten({asdf:1, discard:[[1,2],[2,3]]} as any as playRequestResource))
-// // console.log(flatten({asdf:1, discard:[1]} as any as playRequestResource))
-// // console.log(flatten({asdf:1, house:[[[1,2],[3,4]],[1]]} as any as playRequestResource))
-// // console.log(flatten({asdf:1, house:[[1,2],[3,4],[[],[]]]} as any as playRequestResource))
-// // console.log(flatten({asdf:1, house:[[1,2],[3,4],[],[]]} as any as playRequestResource))
-// // //this should be correct
-// // console.log(flatten({asdf:1, house:[[1,2],[3,4],[5,6,7,8]]} as playRequestResource))
-// // console.log("get this right")
-// // console.log(flatten({house:[[1,2],[3,4],[5,6,7,8]]} as playRequestResource))
-// // // console.log({asdf:1, discard:[[1,2],[2,3]]} as any as playRequestResource)
-
-// // Object.keys(new playRequestResource()).forEach(x => console.log(x))
+// class playRequestResource {
+//     sapaw?:sapawResource[] = [];
+//     house?:number[][] = [];
+//     discard?:number;
+// }
+// // function flatten(obj:playRequestResource): number[]{//type should be playRequestResource
+// //     let flatCardIds:number[] = [];
+// //     let sampleReq = new playRequestResource();
+// //     sampleReq.discard=0;
+// //     // log(typeof(obj.house))
+// //     // log(typeof(sampleReq["house"]))
+// //     if(typeof(obj.discard) == typeof(sampleReq["discard"]) && obj.discard)
+// //         flatCardIds.push(obj.discard);
+// //     if(typeof(obj.house) == typeof(sampleReq["house"]) && obj.house)
+// //         obj.house.forEach(x => flatCardIds.push(...x))
+// //     if(typeof(obj.sapaw) == typeof(sampleReq["sapaw"]) && obj.sapaw)
+// //         obj.sapaw.forEach(x => flatCardIds.push(...x.cardId))
 
 
-function flattenSimple(req:playRequestResource): number[]{//type should be playRequestResource
-    let flatCardIds:number[] = [];
-    !isNaN(req.discard) ? flatCardIds.push(req.discard) : null;
-    req.house ? req.house.forEach(x => flatCardIds.push(...x)) : null;
-    req.sapaw ? req.sapaw.forEach(x => flatCardIds.push(...x.cardId)) : null;
-    return flatCardIds.filter(x => !isNaN(x) && x > 0);
-}
+// //     // typeof(obj.discard) == typeof(playRequestResource["discard"]) && ? flatCardIds.push(obj.discard) : null;
+// //     // obj.house ? obj.house.forEach(x => flatCardIds.push(...x)) : null
+// //     // obj.sapaw ? obj.sapaw.forEach(x => flatCardIds.push(...x.cardId)) : null
+// //     return flatCardIds;
+// // }
+// // // //tests
+// // // //empty anonymous
+// // // console.log(flatten({}))
+// // // //empty playRequestResource
+// // // console.log(flatten({} as playRequestResource))
+// // // //extra property and wrong key name
+// // // console.log(flatten({asdf:1, discards:[[1,2],[2,3]]} as playRequestResource))
+// // // console.log(flatten({asdf:1, discard:[[1,2],[2,3]]} as any as playRequestResource))
+// // // console.log(flatten({asdf:1, discard:[1]} as any as playRequestResource))
+// // // console.log(flatten({asdf:1, house:[[[1,2],[3,4]],[1]]} as any as playRequestResource))
+// // // console.log(flatten({asdf:1, house:[[1,2],[3,4],[[],[]]]} as any as playRequestResource))
+// // // console.log(flatten({asdf:1, house:[[1,2],[3,4],[],[]]} as any as playRequestResource))
+// // // //this should be correct
+// // // console.log(flatten({asdf:1, house:[[1,2],[3,4],[5,6,7,8]]} as playRequestResource))
+// // // console.log("get this right")
+// // // console.log(flatten({house:[[1,2],[3,4],[5,6,7,8]]} as playRequestResource))
+// // // // console.log({asdf:1, discard:[[1,2],[2,3]]} as any as playRequestResource)
 
-console.log(flattenSimple({}))
-//empty playRequestResource
-console.log(flattenSimple({} as playRequestResource))
-//extra property and wrong key name
-console.log(flattenSimple({asdf:1, discards:[[1,2],[2,3]]} as playRequestResource))
-//xtra prop, right name, wrong value type
-console.log(flattenSimple({asdf:1, discard:[[1,2],[2,3]]} as any as playRequestResource))
-console.log(flattenSimple({asdf:1, discard:[["asdf",2],[2,3]]} as any as playRequestResource))
-console.log(flattenSimple({asdf:1, discard:[1]} as any as playRequestResource))
-console.log(flattenSimple({asdf:1, house:[[[1,2],[3,4]],[1]]} as any as playRequestResource))
-console.log(flattenSimple({asdf:1, house:[[1,2],[3,4],[[],[]]]} as any as playRequestResource))
-console.log(flattenSimple({asdf:1, house:[[1,2],[3,4],[],[]]} as any as playRequestResource))
-//this should be correct
-console.log(flattenSimple({asdf:1, house:[[1,2],[3,4],[5,6,7,8]]} as playRequestResource))
-console.log("get this right")
-console.log(flattenSimple({sapaw:[{houseId:99,cardId:[1,2]}],discard:1,house:[[1,2],[3,4],[5,6,7,8]]} as playRequestResource))
-console.log(flattenSimple({sapaw:[{houseId:99,cardId:[1,2]}],discard:1} as playRequestResource))
+// // // Object.keys(new playRequestResource()).forEach(x => console.log(x))
+
+
+// function flattenSimple(req:playRequestResource): number[]{//type should be playRequestResource
+//     let flatCardIds:number[] = [];
+//     !isNaN(req.discard) ? flatCardIds.push(req.discard) : null;
+//     req.house ? req.house.forEach(x => flatCardIds.push(...x)) : null;
+//     req.sapaw ? req.sapaw.forEach(x => flatCardIds.push(...x.cardId)) : null;
+//     return flatCardIds.filter(x => !isNaN(x) && x > 0);
+// }
+
+// console.log(flattenSimple({}))
+// //empty playRequestResource
+// console.log(flattenSimple({} as playRequestResource))
+// //extra property and wrong key name
+// console.log(flattenSimple({asdf:1, discards:[[1,2],[2,3]]} as playRequestResource))
+// //xtra prop, right name, wrong value type
+// console.log(flattenSimple({asdf:1, discard:[[1,2],[2,3]]} as any as playRequestResource))
+// console.log(flattenSimple({asdf:1, discard:[["asdf",2],[2,3]]} as any as playRequestResource))
+// console.log(flattenSimple({asdf:1, discard:[1]} as any as playRequestResource))
+// console.log(flattenSimple({asdf:1, house:[[[1,2],[3,4]],[1]]} as any as playRequestResource))
+// console.log(flattenSimple({asdf:1, house:[[1,2],[3,4],[[],[]]]} as any as playRequestResource))
+// console.log(flattenSimple({asdf:1, house:[[1,2],[3,4],[],[]]} as any as playRequestResource))
+// //this should be correct
+// console.log(flattenSimple({asdf:1, house:[[1,2],[3,4],[5,6,7,8]]} as playRequestResource))
+// console.log("get this right")
+// console.log(flattenSimple({sapaw:[{houseId:99,cardId:[1,2]}],discard:1,house:[[1,2],[3,4],[5,6,7,8]]} as playRequestResource))
+// console.log(flattenSimple({sapaw:[{houseId:99,cardId:[1,2]}],discard:1} as playRequestResource))
+
+
+import api = require("./lib/tongitz.api/tongitzApi")
+let tapi = new api.TongitzApi();
+tapi.NewGame(1,"p1","p2","p3");
+tapi.GetState(1,1);

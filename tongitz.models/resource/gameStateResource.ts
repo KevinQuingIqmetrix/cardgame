@@ -2,14 +2,14 @@
 gamestate
 ----status of game viewed by one player
 */
-import {cardResource} from "tongitz.models/resource/cardResource"
-import {playedCardResource} from "tongitz.models/resource/playedCardResource"
-import {myStatusResource} from "tongitz.models/resource/myStatusResource"
-import {enemyStatusResource} from "tongitz.models/resource/enemyStatusResource"
+import {cardResource} from "./cardResource"
+import {playedCardResource} from "./playedCardResource"
+import {myStatusResource} from "./myStatusResource"
+import {enemyStatusResource} from "./enemyStatusResource"
 import {turnPhaseEnumResource} from "./turnPhaseEnumResource"
 import {winMethodEnumResource} from "./winMethodEnumResource"
 
-export interface gameStateResource{
+export class gameStateResource{
     //id of game
     gameId: number;
     //id of player viewing the game state

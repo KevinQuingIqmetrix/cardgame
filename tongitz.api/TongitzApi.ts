@@ -60,7 +60,7 @@ export class TongitzApi implements ITongitzApi {
         //save deck
         this._svc.setDeck(gameId,deck)
         //save players
-        players.forEach(x => this._svc.addPlayer(gameId,x))
+        this._svc.addPlayers(gameId,...players)
         //save changes
         this._svc.applyState(gameId);
     }

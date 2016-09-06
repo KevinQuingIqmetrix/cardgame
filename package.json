@@ -17,6 +17,7 @@
   "author": "Kevin.Quing",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.14.0",
     "debug": "^2.2.0",
     "write-files": "^1.0.0"
   },

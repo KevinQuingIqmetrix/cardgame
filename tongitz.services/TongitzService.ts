@@ -1,6 +1,6 @@
 //3rd party
-var fs = require("fs");
-const writeFiles = require('write-files');
+import fs = require("fs")
+var writeFiles = require("write-files");
 //models
 import domain = require("../tongitz.models/domain/_domain")
 
@@ -14,7 +14,7 @@ export interface ITongitzService {
     //gets turn number
     getPhase(gameId:number): domain.turnPhaseEnum;
     //adds players
-    addPlayer(gameId:number,player:domain.playerStatus)
+    addPlayers(gameId:number,...player:domain.playerStatus[])
     //get playerStatus
     getPlayer(gameId:number, playerId: number):domain.playerStatus
     //get Players Count
@@ -50,6 +50,7 @@ export class TongitzService implements ITongitzService
         newGame.id = gameId;
         newGame.turn = turn;
         newGame.turnPhase = turnPhase;
+        this.gameStates.push(newGame);
     }
     getTurn(gameId:number): number{
         gameId = gameId ? gameId : 1;
@@ -61,10 +62,10 @@ export class TongitzService implements ITongitzService
         let savedGameState = this.fetchState(gameId)
         return savedGameState.turnPhase;
     }
-    addPlayer(gameId:number,player:domain.playerStatus){
+    addPlayers(gameId:number,...player:domain.playerStatus[]){
         gameId = gameId ? gameId : 1;
         let savedGameState = this.fetchState(gameId)
-        savedGameState.playerStatuses.push(player);
+        savedGameState.playerStatuses.push(...player);
     }
     getPlayer(gameId:number, playerId: number):domain.playerStatus{
         gameId = gameId ? gameId : 1;
@@ -147,7 +148,7 @@ export class TongitzService implements ITongitzService
     }
     loadFromFile(fileName: number){
         // let fileString:string = fs.readFileSync(`tong${fileName}.${ff}`, 'utf8');
-        let fileString:string = fs.readFileSync("game.json")
+        let fileString:string = fs.readFileSync("game.json", "utf8")
         return fileString;
     }
     private isEmpty(obj) {

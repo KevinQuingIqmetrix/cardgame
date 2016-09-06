@@ -167,8 +167,12 @@ export class TongitzApi implements ITongitzApi {
         newHouse.cards.push(gameDiscards.splice(gameDiscards.length - 1,1)[0]);
         //splice from hand to new house
         //map hand cards to id, map playerCardIds to it's index //TOOK some secs to do, some secs to lose, and 1 hour to remake
-        playerCardIds.map((x,i) => gamePlayer.hand.map(i => i.id).indexOf(x))
-            .forEach(x => newHouse.cards.push(new domain.playedCard(gamePlayer.hand.splice(x,1)[0],playerId,gameTurn)));
+
+        playerCardIds.forEach((x,i) => {
+            let cardIndexFromHand = gamePlayer.hand.map(hc => hc.id).indexOf(x);
+            let cardTaken = gamePlayer.hand.splice(cardIndexFromHand,1)[0];
+            newHouse.cards.push(new domain.playedCard(cardTaken,playerId,gameTurn))
+        })
         this._svc.addHouse(gameId,newHouse);
         //update phase
         gamePhase = domain.turnPhaseEnum.play;//TODO:: setPhase

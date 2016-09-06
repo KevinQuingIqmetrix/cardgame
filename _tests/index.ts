@@ -15,5 +15,7 @@ describe("Api Tests", () => {
     require("./api/newGame")
     require("./api/getState")
     require("./api/checkState")
+    require("./api/draw")
+    require("./api/chow")
 })
 

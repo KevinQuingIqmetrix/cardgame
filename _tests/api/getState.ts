@@ -50,7 +50,7 @@ describe("GetState",() => {
             let gameId = 1, playerId = 5;
 
             let service = new svc.TongitzService(); //to be stubbed dependencies
-            let stubFetchState = sinon.stub(service,"fetchState").returns(testData.sampleGameState()) //stub dependencies; throws
+            let stubFetchState = sinon.stub(service,"fetchState").returns(testData.sampleGameState()) //stub dependencies; 
 
             unit = new api.TongitzApi(service); //instantiate unit tested module
             expect(unit.GetState.bind(unit,gameId,playerId)).to.throw() //call tested function and expect throw
@@ -59,6 +59,20 @@ describe("GetState",() => {
             //asserts
             helper.calledOnce(stubFetchState); //called once for every function supposed to be called
         });
+        // it("when game with gameId passed, does not exist", () => {
+        //     //test data
+        //     let gameId = 99, playerId = 1;
+
+        //     let service = new svc.TongitzService();
+        //     let stubFetchState = sinon.stub(service,"fetchState").throws() 
+
+        //     unit = new api.TongitzApi(service); 
+        //     expect(unit.GetState.bind(unit,gameId,playerId)).to.throw() 
+
+        //     helper.restore(stubFetchState); 
+        //     //asserts
+        //     helper.calledOnce(stubFetchState); 
+        // })
     })
 })
 

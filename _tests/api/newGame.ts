@@ -91,6 +91,20 @@ describe("NewGame",() => {
 
             helper.restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
         })
+        // it("when gameid already exists", () => {
+        //     let gameid = 1, p = ["test1"]
+
+        //     let service = new svc.TongitzService(); //to be stubbed dependencies
+
+        //     let stubAddGame = sinon.stub(service,"addGame") //stub dependencies
+        //     ,   stubSetDeck = sinon.stub(service,"setDeck")
+        //     ,   stubApplyState = sinon.stub(service,"applyState").throws()
+            
+        //     unit = new api.TongitzApi(service); //instantiate unit tested module
+        //     expect(unit.NewGame.bind(unit,gameid,...p)).to.throw();
+
+        //     helper.restore(stubAddGame,stubSetDeck,stubApplyState); //clean up
+        // })
     })
 })
 

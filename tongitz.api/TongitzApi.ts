@@ -89,13 +89,13 @@ export class TongitzApi implements ITongitzApi {
         //getState
 
         let gameTurn:number = this._svc.getTurn(gameId);
-        if(gameTurn == turn){
+        if(turn < gameTurn){
+            return mapper.gameStateToResource(this._svc.fetchState(gameId), playerId);
+        }
+        else{
             let emptyState = new domain.gameState();
             emptyState.turn = gameTurn;
             return mapper.gameStateToResource(emptyState, playerId);
-        }
-        else {
-            return mapper.gameStateToResource(this._svc.fetchState(gameId), playerId);
         }
     }
     /**

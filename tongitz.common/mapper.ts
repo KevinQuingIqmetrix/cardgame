@@ -7,21 +7,21 @@ import resource = require("../tongitz.models/resource/_resource")
     //toResourceMap
     export function gameStateToResource (gameState:domain.gameState, playerId:number): resource.gameStateResource{
         let t = gameState;
-        let turnBy =t.playerStatuses.filter(p => p.turn == (((t.turn-1) % t.playerStatuses.length)+1))[0]; 
+        let turnBy = t.playerStatuses.length ? t.playerStatuses.filter(p => p.turn == (((t.turn-1) % t.playerStatuses.length)+1))[0] : null; 
         let winner = t.winnerId ? [t.winnerId].map(x => t.playerStatuses.filter(x => x.id)[0].name)[0] : ''
         // let lastDiscardBy = t.playerStatuses.filter(p => p.id == t.discards[t.discards.length-1].playerId)[0];
-        let idName: [number,string][] = t.playerStatuses.map(x => [x.id,x.name] as [number,string])
+        let idName: [number,string][] = t.playerStatuses.length ? t.playerStatuses.map(x => [x.id,x.name] as [number,string]) : [];
         return {
             gameId: t.id,
             playerId: playerId,
             turn: t.turn,
             turnPhase: this.turnPhaseEnumToResource(t.turnPhase),
-            playerTurn: turnBy.name,
-            myTurn: playerId == turnBy.id,
+            playerTurn: turnBy ? turnBy.name : "",
+            myTurn: playerId == (turnBy ? turnBy.id : -1),
             deck: t.deck.length,
-            lastDiscard: this.playedCardToResource(t.discards[t.discards.length-1],idName),
-            status:this.playerStatusToMyStatus(t.playerStatuses.filter(x => x.id == playerId)[0],t.discards,t.houses),
-            enemyStatus: this.playerStatusToEnemyStatuses(t.playerStatuses.filter(x => x.id != playerId),t.discards,t.houses),
+            lastDiscard: t.discards ? this.playedCardToResource(t.discards[t.discards.length-1],idName) : null,
+            status: t.playerStatuses.length ? this.playerStatusToMyStatus(t.playerStatuses.filter(x => x.id == playerId)[0],t.discards,t.houses) : null,
+            enemyStatus: t.playerStatuses.length ? this.playerStatusToEnemyStatuses(t.playerStatuses.filter(x => x.id != playerId),t.discards,t.houses) : null,
             winMethod: this.winMethodEnumToResource(t.winMethod),
             winnerName: winner,
             isWinner: t.winnerId == playerId,

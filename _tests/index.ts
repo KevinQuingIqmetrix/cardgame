@@ -14,5 +14,6 @@ import svc = require("../tongitz.services/TongitzService")
 describe("Api Tests", () => {
     require("./api/newGame")
     require("./api/getState")
+    require("./api/checkState")
 })
 

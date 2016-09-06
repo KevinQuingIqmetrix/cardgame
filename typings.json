@@ -1,7 +1,17 @@
 {
   "dependencies": {
+    "debug": "registry:npm/debug#2.0.0+20160723033700",
     "express": "registry:npm/express#4.14.0+20160815112707",
     "serve-static": "registry:npm/serve-static#1.11.1+20160810053450"
-    "debug": "registry:npm/debug#2.0.0+20160723033700"
+  },
+  "devDependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160723033700",
+    "sinon": "registry:npm/sinon#1.16.0+20160723033700"
+  },
+  "globalDevDependencies": {
+    "mocha": "registry:env/mocha#2.2.5+20160723033700"
+  },
+  "globalDependencies": {
+    "node": "registry:env/node#6.0.0+20160902022231"
   }
 }

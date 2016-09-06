@@ -1,6 +1,14 @@
-*.js
-*.map
+#external packages
 node_modules
+
+#build folder
 lib
+
+#
 game.json
+
+#vscode config
 launch.json
+
+#my scratch
+test.ts

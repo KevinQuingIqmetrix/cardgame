@@ -217,35 +217,37 @@ export class TongitzApi implements ITongitzApi {
         })
         //splice from hand, put to respective set of cards(list of sapaw, list of houses, discards)
         playCards.sapaw.forEach(s => {
-            let handCardIndexes = s.cardId.map(cid => gamePlayer.hand.map(gh => gh.id).indexOf(cid))//index of requested cards
-            handCardIndexes.forEach(i => {
-                gameHouses.filter(gh => gh.id == s.houseId)[0]
-                    .cards.push(new domain.playedCard(gamePlayer.hand.splice(i,1)[0],playerId,gameTurn))
+            s.cardId.forEach(cid => {
+                let handCardIndex = gamePlayer.hand.map(hc => hc.id).indexOf(cid);
+                new domain.playedCard(gamePlayer.hand.splice(handCardIndex,1)[0],playerId,gameTurn)
             })
         })
-        playCards.houses.forEach(h => {
-            let handCardIndexes = h.map(cid => gamePlayer.hand.map(gh => gh.id).indexOf(cid))//index of requested cards
+        playCards.houses.forEach(hs => {
             let newHouse = new domain.house();
             newHouse.id = gameHouses.length + 1;
             newHouse.playerId = playerId;
-            handCardIndexes.forEach(i => {
-                newHouse.cards.push(new domain.playedCard(gamePlayer.hand.splice(i,1)[0],playerId,gameTurn))
-            })
+            hs.forEach(h => {
+                let handCardIndex = gamePlayer.hand.map(hc => hc.id).indexOf(h);
+                newHouse.cards.push(new domain.playedCard(gamePlayer.hand.splice(handCardIndex,1)[0],playerId,gameTurn));
+            });
             gameHouses.push(newHouse);
         })
         let gameDiscards = this._svc.getDiscards(gameId);
         let discardIndex = gamePlayer.hand.map(x => x.id).indexOf(playCards.discard)
         gameDiscards.push(new domain.playedCard(gamePlayer.hand.splice(discardIndex,1)[0],playerId,gameTurn))
-        //apply
-        this._svc.applyState(gameId);
+        
         //mark winner, run out of deck, run out of handcards
         if(gamePlayer.hand.length == 0) {
             this._svc.setWinner(gameId,playerId,domain.winMethodEnum.noHand);
         }
-        if(this._svc.getDeck.length < 1){
-            this._svc.setWinner(gameId,playerId,domain.winMethodEnum.leastHand);
-        }
         //if deck.length == 0, player with least hand
+        else if(this._svc.getDeck.length < 1){
+            let playerIdRanks = this._svc.getPlayers(gameId).map(x => [x.id,x.hand.map(y => y.rank).reduce((p,c) => p + c)] as [number,number]);
+            let winnerId = playerIdRanks.reduce((p,c,i,a) => [p,c].sort((x,y) => x[1] - y[1])[0])[0];
+            this._svc.setWinner(gameId,winnerId,domain.winMethodEnum.leastHand)
+        }
+        //apply
+        this._svc.applyState(gameId);
     }
     
     private generateDeck(){

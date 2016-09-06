@@ -17,6 +17,8 @@ export interface ITongitzService {
     addPlayers(gameId:number,...player:domain.playerStatus[])
     //get playerStatus
     getPlayer(gameId:number, playerId: number):domain.playerStatus
+    //get playerStatuses
+    getPlayers(gameId:number):domain.playerStatus[]
     //get Players Count
     getPlayerCount(gameId:number): number;
     //returns deck(card[])
@@ -71,6 +73,11 @@ export class TongitzService implements ITongitzService
         gameId = gameId ? gameId : 1;
         let savedGameState = this.fetchState(gameId)
         return savedGameState.playerStatuses.filter(x => x.id == playerId)[0];
+    }
+    getPlayers(gameId:number):domain.playerStatus[]{
+        gameId = gameId ? gameId : 1;
+        let savedGameState = this.fetchState(gameId)
+        return savedGameState.playerStatuses;
     }
     getPlayerCount(gameId:number): number{
         gameId = gameId ? gameId : 1;

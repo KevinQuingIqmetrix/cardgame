@@ -187,7 +187,7 @@ export class TongitzApi implements ITongitzApi {
     public Play(gameId:number, playerId: number, playCards: resource.playRequestResource){
         this.validateGameOnGoing(this._svc.getWinMethod(gameId));
         //discard is required
-        if(!(playCards ? isNaN(playCards.discard) ? true : false  : false))
+        if(!(playCards ? !isNaN(playCards.discard) ? true : false  : false))
             return;
         let gameTurn = this._svc.getTurn(gameId);
         let gamePhase = this._svc.getPhase(gameId);

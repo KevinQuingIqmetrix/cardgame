@@ -17,7 +17,18 @@ import resource = require("../../tongitz.models/resource/_resource")
 describe("Play",() => {
     let unit:api.TongitzApi;
     let service: svc.TongitzService;
-    let stubGetTurn,stubGetPhase,stubGetPlayer,stubGetPlayerCount,stubGetDeck,stubApplyState,stubGetDiscards,stubGetHouses,stubAddHouse,stubSetWinner, stubGetWinMethod, stubGetPlayers;
+    let stubGetTurn      :sinon.SinonStub
+        ,stubGetPhase        :sinon.SinonStub
+        ,stubGetPlayer       :sinon.SinonStub
+        ,stubGetPlayerCount  :sinon.SinonStub
+        ,stubGetDeck         :sinon.SinonStub
+        ,stubApplyState      :sinon.SinonStub
+        ,stubGetDiscards     :sinon.SinonStub
+        ,stubGetHouses       :sinon.SinonStub
+        ,stubAddHouse        :sinon.SinonStub
+        ,stubSetWinner       :sinon.SinonStub
+        ,stubGetWinMethod    :sinon.SinonStub
+        ,stubGetPlayers      :sinon.SinonStub;
     let stubs:sinon.SinonStub[];
     beforeEach(() => {
             service = new svc.TongitzService();

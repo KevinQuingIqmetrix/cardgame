@@ -17,5 +17,6 @@ describe("Api Tests", () => {
     require("./api/checkState")
     require("./api/draw")
     require("./api/chow")
+    require("./api/play")
 })
 

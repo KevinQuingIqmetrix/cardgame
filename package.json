@@ -11,14 +11,16 @@
     "build": "tsc",
     "test": "tsc & mocha ./lib/_tests/index",
     "mocha": "mocha",
-    "runtestjs": "tsc test & node test"
+    "runtestjs": "tsc test & node test",
+    "run": "node ./lib/"
   },
   "keywords": [],
   "author": "Kevin.Quing",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.0",
+    "body-parser": "^1.15.2",
     "debug": "^2.2.0",
+    "express": "^4.14.0",
     "write-files": "^1.0.0"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@
         "removeComments": true,
         "declaration":true,
         "outDir":"lib/",
-        "target": "es5",
+        "target": "es6",
         "strictNullChecks": false,
         "sourceMap": true,
         "baseUrl": "."
